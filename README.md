@@ -19,7 +19,7 @@ package, this workflow is pretty much generic.
 
 ```bash
 # clone our repo
-$ git clone https://github.com/Vortilion/angularjs-webpack-es2015.git my-app
+$ git clone https://github.com/Vortilion/angularjs-webpack-es2015.git angularjs-webpack-es2015
 
 # change directory to your app
 $ cd angularjs-webpack-es2015
