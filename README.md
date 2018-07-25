@@ -1,8 +1,8 @@
 # angularjs-webpack
 
-A complete, yet simple, starter for AngularJS using Webpack.
+A complete, yet simple, starter for AngularJS >= 1.5 using Webpack.
 
-This workflow serves as a starting point for building AngularJS (1.x) applications using Webpack 4.x. Should be noted that apart from the pre-installed angular 
+This workflow serves as a starting point for building AngularJS (>= 1.5) applications using Webpack 4.x. Should be noted that apart from the pre-installed angular 
 package, this workflow is pretty much generic.
 
 * ES6, and ES7 support with babel.
