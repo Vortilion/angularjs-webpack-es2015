@@ -1,18 +1,20 @@
 const cleanPlugin = require('clean-webpack-plugin');
 const copyPlugin = require('copy-webpack-plugin');
-const extractPlugin = require('mini-css-extract-plugin');
+const miniCssExtractPlugin = require('mini-css-extract-plugin');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack'); //to access built-in plugins
 const path = require('path');
 
 const root = path.resolve(__dirname, 'src');
 const dist = path.resolve(__dirname, 'dist');
+const appWebContext = '/angularjs-webpack-es2015';
+const isDevMode = process.env.NODE_ENV !== undefined ? process.env.NODE_ENV.toString().trim() !== 'production' : true;
 
 const paths = {
     app: `${root}/app/app.module.js`,
     styles: `${root}/styles`,
     static: {
-        index: `${root}/index.html`,
+        index: `${root}/404.html`,
         images: `${root}/img/**/*`,
     },
 };
@@ -32,11 +34,14 @@ const prep = {
     htmlwebpack: new htmlWebpackPlugin({
         template: './src/index.html',
         inject: 'body'
+    }),
+    extract: new miniCssExtractPlugin({
+        // Options similar to the same options in webpackOptions.output
+        // both options are optional
+        path: `${dist}/`,
+        publicPath: `/${root}/`,
+        filename: "css/[name].css"
     })
-};
-
-const extract = {
-    styles: new extractPlugin('css/styles.css'),
 };
 
 // Loaders
@@ -49,12 +54,19 @@ const scripts = {
     ],
 };
 
+const images = {
+    test: /\.(jpe?g|png|gif|svg)$/i,
+    use: [
+        {loader: 'file-loader'}
+    ]
+};
+
 const styles = {
     test: /\.(sa|sc|c)ss$/,
     use: [
-        process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
-        'css-loader',
-        'sass-loader'
+        {loader: isDevMode ? 'style-loader' : miniCssExtractPlugin.loader},
+        {loader:'css-loader'},
+        {loader:'sass-loader'}
     ]
 };
 
@@ -75,10 +87,16 @@ const fonts = {
 
 // Config object
 const config = {
-    entry: paths.app,
+    /* if no entry name is submitted, e.g. like 'entry: paths.app' instead of an object, the name is 'main'.
+       This value is available e.g. in output config via [name] (see output.filename)
+       @see https://webpack.js.org/configuration/entry-context/#entry */
+    entry: {
+        testcomponents: paths.app
+    },
     module: {
         rules: [
             scripts,
+            images,
             styles,
             markup,
             fonts,
@@ -87,18 +105,21 @@ const config = {
     plugins: [
         prep.clean,
         prep.copy,
-        extract.styles,
+        prep.extract,
         prep.htmlwebpack
     ],
-    output: {
+    output: { // @see https://webpack.js.org/configuration/output/
         path: `${dist}/`,
-        publicPath: '/',
+        publicPath: '/angularjs-webpack-es2015',
         filename: 'js/app.[name].js',
     },
     devServer: {
         contentBase: './src',
+        openPage: 'angularjs-webpack-es2015/',
         port: 8080,
-        historyApiFallback: true,
+        historyApiFallback: {
+            index:'404.html'
+        }
     },
 };
 
