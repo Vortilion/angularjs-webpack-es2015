@@ -3,16 +3,13 @@ import template from './item-list-container.component.html';
 export const ItemListContainerComponent = {
     template,
     controller: class ItemListContainerComponent {
+        constructor(itemListContainerService) {
+            'ngInject';
+            this.itemListContainerService = itemListContainerService;
+        }
         $onInit() {
-            this.activeItems = [
-                {name: 'foo', active: true},
-                {name: 'bar', active: true}
-            ];
-
-            this.inactiveItems = [
-                {name: 'foo', active: false},
-                {name: 'bar', active: false}
-            ];
+            this.activeItems = this.itemListContainerService.getItems().activeItems;
+            this.inactiveItems = this.itemListContainerService.getItems().inactiveItems;
         }
 
         switchStatus(item) {

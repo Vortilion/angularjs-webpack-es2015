@@ -8,6 +8,9 @@ export const ItemComponent = {
     },
     controller: class ItemComponent {
 
+        $onInit() {
+            this.itemService.getItem('1').then(response => this.item = response);
+        }
     }
 };
 
